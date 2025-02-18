@@ -2,7 +2,7 @@ const config = {
     API_BASE_URL: (() => {
         try {
             const hostname = window.location.hostname;
-            return `http://${hostname}:5000/api`;
+            return `https://backend-g2dw.onrender.com/api`;
         } catch (error) {
             console.error('Error getting API URL:', error);
             return 'http://localhost:5000/api';
