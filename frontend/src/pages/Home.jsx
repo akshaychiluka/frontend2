@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import config from '../config';
 import FileUpload from '../components/FileUpload';
+import './styles/Home.css'; // Add this import
 
 function Home() {
     const [quizzes, setQuizzes] = useState([]);
@@ -59,8 +60,7 @@ function Home() {
 
     return (
         <div className="home-container">
-            <br></br>
-            <h1>Quiz Generator</h1>
+            <h1 className="page-title">Quiz Generator</h1>
             <FileUpload onUploadSuccess={handleUploadSuccess} />
             
             <div className="quizzes-section">
