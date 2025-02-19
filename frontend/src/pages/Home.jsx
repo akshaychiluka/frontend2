@@ -7,6 +7,7 @@ function Home() {
     const [quizzes, setQuizzes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [refreshTrigger, setRefreshTrigger] = useState(0); // Add this line
 
     const fetchQuizzes = async () => {
         try {
@@ -15,13 +16,19 @@ function Home() {
             if (!response.ok) throw new Error('Failed to fetch quizzes');
             const data = await response.json();
             setQuizzes(data);
-            setError(null);
         } catch (error) {
             console.error('Error:', error);
             setError('Failed to load quizzes');
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleUploadSuccess = (newQuiz) => {
+        // Force refresh of quiz list
+        setRefreshTrigger(prev => prev + 1);
+        // Optimistically update the UI
+        setQuizzes(prevQuizzes => [newQuiz, ...prevQuizzes]);
     };
 
     const handleDelete = async (id) => {
@@ -42,17 +49,19 @@ function Home() {
         }
     };
 
+    // Update useEffect to depend on refreshTrigger
     useEffect(() => {
         fetchQuizzes();
-    }, []);
+    }, [refreshTrigger]);
 
     if (loading) return <div className="loading">Loading quizzes...</div>;
     if (error) return <div className="error-message">{error}</div>;
 
     return (
         <div className="home-container">
+            <br></br>
             <h1>Quiz Generator</h1>
-            <FileUpload onUploadSuccess={fetchQuizzes} />
+            <FileUpload onUploadSuccess={handleUploadSuccess} />
             
             <div className="quizzes-section">
                 <h2>Available Quizzes</h2>

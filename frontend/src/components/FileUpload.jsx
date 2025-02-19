@@ -1,5 +1,5 @@
-import { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import axios from 'axios';
 import config from '../config';
 
 function FileUpload({ onUploadSuccess }) {
@@ -41,7 +41,18 @@ function FileUpload({ onUploadSuccess }) {
             
             if (response.data && response.data.questions) {
                 setQuiz(response.data);
-                onUploadSuccess?.();
+                
+                // Call onUploadSuccess with the new quiz data
+                onUploadSuccess(response.data);
+                
+                // Clear the file input
+                setFile(null);
+                
+                // Show preview for 2 seconds then fetch updated list
+                setTimeout(() => {
+                    // Trigger a fetch of the latest quiz list
+                    onUploadSuccess(response.data);
+                }, 2000);
             }
         } catch (error) {
             console.error("Upload failed:", error);
